@@ -6,12 +6,11 @@
 /*   By: gmerlene <gmerlene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 15:16:10 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/14 19:57:28 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/16 16:25:18 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
-#include "libft/libft.h"
 
 static int	validate_param(const char *format_str)
 {
@@ -66,51 +65,51 @@ static int	get_params_number(const char *format_str)
 	return (n_params);
 }
 
-t_formating	**create_params_formating(const char *fs, int n_params)
+t_format	**create_params_format(const char *fs, int n_params)
 {
-	t_formating	**params_formating;
+	t_format	**params_format;
 	size_t		i;
 	size_t		j;
 
 	i = 0;
 	j = 0;
-	params_formating = malloc(sizeof(t_formating) * (n_params));
-	if (!params_formating)
+	params_format = malloc(sizeof(t_format) * (n_params));
+	if (!params_format)
 		return (NULL);
 	while (fs[i])
 	{
 		if (fs[i] == '%')
 		{
-			params_formating[j] = create_formating(fs + i + 1);
-			if (!params_formating[j])
-				return (free_params_formating(params_formating, j));
+			params_format[j] = create_format(fs + i + 1);
+			if (!params_format[j])
+				return (free_params_format(params_format, j));
 			j++;
 		}
 		i++; // need to shift i;
 	}
-	return (params_formating);
+	return (params_format);
 }
 
 int	ft_printf(const char *format_str, ...)
 {
 	int			n_params;
-	t_formating	**params_formating;
+	t_format	**params_format;
 
 	n_params = get_params_number(format_str);
 	if (n_params == ERROR)
 		return (0);
-	params_formating = create_params_formating(format_str, n_params);
-	if (!params_formating)
+	params_format = create_params_format(format_str, n_params);
+	if (!params_format)
 		return (0);
-	printf("conversion type: %c\n", params_formating[0]->conversion_type);
-	printf("min width: %d\n", params_formating[0]->min_width);
-	printf("digit width: %d\n", params_formating[0]->digit_width);
-	printf("is dash: %d\n", params_formating[0]->is_dash);
-	printf("is dot: %d\n", params_formating[0]->is_dot);
-	printf("is hash: %d\n", params_formating[0]->is_hash);
-	printf("is plus: %d\n", params_formating[0]->is_plus);
-	printf("is space: %d\n", params_formating[0]->is_space);
-	printf("is zero: %d\n", params_formating[0]->is_zero);
+	printf("conversion type: %c\n", params_format[0]->type);
+	printf("min width: %d\n", params_format[0]->min_width);
+	printf("digit width: %d\n", params_format[0]->digit_width);
+	printf("is dash: %d\n", params_format[0]->is_dash);
+	printf("is dot: %d\n", params_format[0]->is_dot);
+	printf("is hash: %d\n", params_format[0]->is_hash);
+	printf("is plus: %d\n", params_format[0]->is_plus);
+	printf("is space: %d\n", params_format[0]->is_space);
+	printf("is zero: %d\n", params_format[0]->is_zero);
 	return (n_params);
 }
 

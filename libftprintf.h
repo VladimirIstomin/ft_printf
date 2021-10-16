@@ -6,7 +6,7 @@
 /*   By: gmerlene <gmerlene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 15:26:34 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/14 19:56:17 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/16 16:47:31 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@
 
 # include <stdarg.h>
 # include <stdlib.h>
+# include <unistd.h>
+# include "libft/libft.h"
+
 # include <stdio.h>
 
-typedef struct s_formating
+typedef struct s_format
 {
-	char		conversion_type;
+	char		type;
 	int			min_width;
 	int			digit_width;
 	int			is_dash;
@@ -34,13 +37,21 @@ typedef struct s_formating
 	int			is_plus;
 	int			is_space;
 	int			is_zero;
-}				t_formating;
+}				t_format;
 
 int			ft_printf(const char *format_str, ...);
-t_formating	*create_empty_formating_structure(void);
-void		ease_formating_flags(t_formating *formating);
-t_formating	**free_params_formating(t_formating **params_formating, size_t end);
-t_formating	*create_formating(const char *fs);
-t_formating	**create_params_formating(const char *fs, int n_params);
+t_format	*create_empty_format_structure(void);
+void		ease_format_flags(t_format *format);
+t_format	**free_params_format(t_format **params_format, size_t end);
+t_format	*create_format(const char *fs);
+t_format	**create_params_format(const char *fs, int n_params);
+int			write_char_n_times(char c, int n);
+int			write_additional(t_format *format, const void *value);
+int			write_content(t_format *format, const void *value);
+int			put_string(char *s);
+size_t		get_printed_len(const void *obj, char type);
+int			put_unsigned_system(unsigned int n, char *system);
+int			f_putchar(char c);
+int			put_num(int n);
 
 #endif
