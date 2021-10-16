@@ -6,7 +6,7 @@
 /*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 20:25:27 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/15 14:55:21 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/16 15:09:44 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static t_format	*create_empty_format_structure(void)
 	format = malloc(sizeof(t_format));
 	if (!format)
 		return (NULL);
-	format->conversion_type = 0;
+	format->type = 0;
 	format->digit_width = 0;
 	format->min_width = 0;
 	format->is_dash = 0;
@@ -89,10 +89,13 @@ t_format	*create_format(const char *fs, size_t *i)
 		update_modificator(fs, format, i);
 	if (!ft_strchr(CONVERSIONS, fs[*i]))
 		return (NULL);
-	format->conversion_type = fs[*i];
+	format->type = fs[*i];
 	if (format->is_plus)
 		format->is_space = 0;
 	if (format->is_dash || format->is_dot)
 		format->is_zero = 0;
 	return (format);
 }
+// possibly update create_format function, because '.' is not possible
+// with some conversion types
+// better check it with -Wall -Werror -Wextra flags, but also run tests

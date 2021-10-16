@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/15 09:13:39 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/15 16:22:10 by gmerlene         ###   ########.fr       */
+/*   Created: 2021/10/13 15:16:10 by gmerlene          #+#    #+#             */
+/*   Updated: 2021/10/16 20:16:39 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static t_format	**create_params_format(const char *fs, int n_params)
 	{
 		if (fs[i] == '%')
 		{
-			params_format[j] = create_format(fs,  &i);
+			params_format[j] = create_format(fs, &i);
 			if (!params_format[j])
 				return (free_params_format(params_format, j));
 			j++;
@@ -95,7 +95,7 @@ int	ft_printf(const char *format_str, ...)
 	params_format = create_params_format(format_str, n_params);
 	if (!params_format)
 		return (0);
-	printf("conversion type: %c\n", params_format[2]->conversion_type);
+	printf("conversion type: %c\n", params_format[2]->type);
 	printf("min width: %d\n", params_format[2]->min_width);
 	printf("digit width: %d\n", params_format[2]->digit_width);
 	printf("is dash: %d\n", params_format[2]->is_dash);
@@ -116,6 +116,3 @@ int	main(void)
 	printf("%14.012d %12%", 12);
 	return (0);
 }
-
-
-
