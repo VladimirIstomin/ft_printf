@@ -63,7 +63,7 @@ static void	update_modificator(const char *fs, t_format *format, size_t *i)
 		format->is_zero = 1;
 }
 
-t_format	**free_params_format(t_format **params_format, size_t end)
+t_format	**free_parsed_formats(t_format **params_format, size_t end)
 {
 	size_t	i;
 
@@ -78,7 +78,7 @@ t_format	**free_params_format(t_format **params_format, size_t end)
 	return (NULL);
 }
 
-t_format	*create_format(const char *fs, size_t *i)
+t_format	*parse_format(const char *fs, size_t *i)
 {
 	t_format	*format;
 

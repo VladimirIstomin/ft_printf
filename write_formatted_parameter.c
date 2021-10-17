@@ -6,7 +6,7 @@
 /*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 16:18:48 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/16 20:25:32 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/17 18:17:26 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	set_prefix_vars(t_format *format, const void *val, int *nz, int *ns)
 	*ns = format->min_width - val_len - *nz;
 }
 
-int	write_formatted_parameted(t_format *format, const void *val)
+int	write_formatted_parameter(t_format *format, const void *val)
 {
 	int		wb;
 	int		n_zeros;
@@ -39,44 +39,4 @@ int	write_formatted_parameted(t_format *format, const void *val)
 	if (!format->is_dash)
 		wb += write_char_n_times(' ', n_spaces);
 	return (wb);
-}
-
-int	test_printf(char *fs, t_format *format, int size, ...)
-{
-	va_list	ap;
-	int		i;
-	int		wb;
-	//char	*arg;
-
-	(void)fs;
-	i = 0;
-	wb = 0;
-	va_start(ap, size);
-	while (i < size)
-	{
-		wb += print_param(format, va_arg(ap, void *));
-		i++;
-	}
-	va_end(ap);
-	return (wb);
-}
-
-int	main(void)
-{
-	// t_format	*format;
-	// char		*fs = "%d";
-	// int			val1 = 12;
-	// char		val2 = 'z';
-	// char		*ptr;
-
-	// format = create_empty_format_structure();
-	// format->conversion_type = 'd';
-	// format->is_space = 0;
-	// format->is_plus = 1;
-	// ftt_printf(fs, format, 1, val1);
-	// printf("\n");
-	// //printf("%s\n", ptr);
-	// printf("%zu\n", ft_strlen((void *)ptr));
-	printf("%12.3d\n", 'a');
-	return (0);
 }

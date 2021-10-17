@@ -6,7 +6,7 @@
 /*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 15:26:34 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/16 20:15:19 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/17 19:11:22 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,17 @@ typedef struct s_format
 }				t_format;
 
 int			ft_printf(const char *format_str, ...);
-t_format	**free_params_format(t_format **params_format, size_t end);
-t_format	*create_format(const char *fs, size_t *i);
-t_format	*create_empty_format_structure(void);
+t_format	**free_parsed_formats(t_format **params_format, size_t end);
+t_format	*parse_format(const char *fs, size_t *i);
 
 size_t		get_parameter_len(const void *obj, char type);
-int			write_formatted_parameted(t_format *format, const void *val);
+int			write_formatted_parameter(t_format *format, const void *val);
 int			write_parameter_prefix(t_format *format, const void *val);
 int			write_initial_parameter(t_format *format, const void *val);
-int			write_num_without_sign(int n);
+int			write_num_without_sign(int *n);
 int			write_string(char *s);
-int			write_unsigned_in_notation(unsigned int n, char *notation_symbols);
-int			white_char(char c);
+int			write_unsigned_in_notation(unsigned int *n, char *notation_symbols);
+int			write_char(const char *c);
 int			write_char_n_times(char c, int n);
 
 #endif

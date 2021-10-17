@@ -6,13 +6,13 @@
 /*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 15:16:10 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/16 20:16:39 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/17 19:07:24 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-static int	validate_param(const char *format_str, int *i)
+static int	validate_format(const char *format_str, int *i)
 {
 	int		is_dot;
 	char	curr;
@@ -38,7 +38,22 @@ static int	validate_param(const char *format_str, int *i)
 	return (ERROR);
 }
 
-static int	get_params_number(const char *format_str)
+static int	get_params_number(t_format	**formats, int n_formats)
+{
+	int	n_params;
+	int	i;
+
+	n_params = 0;
+	while (i < n_formats)
+	{
+		if (formats[i]->type != '%')
+			n_params++;
+		i++;
+	}
+	return (n_params);
+}
+
+static int	get_formats_number(const char *format_str)
 {
 	int	i;
 	int	n_params;
@@ -49,7 +64,7 @@ static int	get_params_number(const char *format_str)
 	{
 		if (format_str[i] == '%')
 		{
-			if (validate_param(format_str, &i) != ERROR)
+			if (validate_format(format_str, &i) != ERROR)
 				n_params++;
 			else
 				return (ERROR);
@@ -59,60 +74,83 @@ static int	get_params_number(const char *format_str)
 	return (n_params);
 }
 
-static t_format	**create_params_format(const char *fs, int n_params)
+static t_format	**parse_formats_from_format_string(const char *fs, int n_params)
 {
-	t_format	**params_format;
+	t_format	**formats;
 	size_t		i;
 	size_t		j;
 
 	i = 0;
 	j = 0;
-	params_format = malloc(sizeof(t_format) * (n_params));
-	if (!params_format)
+	formats = malloc(sizeof(t_format) * (n_params));
+	if (!formats)
 		return (NULL);
 	while (fs[i])
 	{
 		if (fs[i] == '%')
 		{
-			params_format[j] = create_format(fs, &i);
-			if (!params_format[j])
-				return (free_params_format(params_format, j));
+			formats[j] = parse_format(fs, &i);
+			if (!formats[j])
+				return (free_parsed_formats(formats, j));
 			j++;
 		}
 		i++;
 	}
-	return (params_format);
+	return (formats);
 }
 
-int	ft_printf(const char *format_str, ...)
+int foo(void **argv, const char *fs, t_format **formats)
 {
+	int	i;
+	int	j;
+	int	wb;
+
+	wb = 0;
+	i = 0;
+	j = 0;
+	while (fs[i])
+	{
+		if (fs[i] == '%')
+		{
+			i++;
+			if (formats[j]->type == '%')
+				wb += write_formatted_parameter(formats[j], NULL);
+			else
+				wb += write_formatted_parameter(formats[j], argv[j]);
+			while (!ft_strchr(CONVERSIONS, fs[i]))
+				i++;           
+			j++;
+		}
+		else
+			wb += write_char(fs + i);
+		i++;
+	}
+	return (wb);
+}
+
+int	ft_printf(const char *fs, ...)
+{
+	int			n_formats;
 	int			n_params;
-	t_format	**params_format;
+	t_format	**formats;
+	va_list		ap;
+	int			i;
+	void		**argv;
 
-	n_params = get_params_number(format_str);
-	if (n_params == ERROR)
-		return (-1);
-	params_format = create_params_format(format_str, n_params);
-	if (!params_format)
-		return (0);
-	printf("conversion type: %c\n", params_format[2]->type);
-	printf("min width: %d\n", params_format[2]->min_width);
-	printf("digit width: %d\n", params_format[2]->digit_width);
-	printf("is dash: %d\n", params_format[2]->is_dash);
-	printf("is dot: %d\n", params_format[2]->is_dot);
-	printf("is hash: %d\n", params_format[2]->is_hash);
-	printf("is plus: %d\n", params_format[2]->is_plus);
-	printf("is space: %d\n", params_format[2]->is_space);
-	printf("is zero: %d\n", params_format[2]->is_zero);
-	return (n_params);
-}
-
-int	main(void)
-{
-	//char	*fs = "%.c %.c %0 0 00 1412c";
-	//cspdiuxX%%
-
-	//printf("N_PARAMS: %d\n", ft_printf(fs));
-	printf("%14.012d %12%", 12);
-	return (0);
+	n_formats = get_formats_number(fs);
+	if (n_formats == ERROR)
+		return (ERROR);
+	formats = parse_formats_from_format_string(fs, n_formats);
+	if (!formats)
+		return (ERROR);
+	n_params = get_params_number(formats, n_formats);
+	va_start(ap, n_params);
+	argv = malloc(sizeof(void *) * n_params);
+	if (!argv)
+		return (ERROR);
+	i = 0;
+	while (i++ < n_params)
+		argv[i - 1] = va_arg(ap, void *);
+	va_end(ap);
+	return (foo(argv, fs, formats));
 }
