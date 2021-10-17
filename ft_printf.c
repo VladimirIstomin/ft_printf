@@ -6,7 +6,7 @@
 /*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 15:16:10 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/17 19:07:24 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/17 19:18:25 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int foo(void **argv, const char *fs, t_format **formats)
 			j++;
 		}
 		else
-			wb += write_char(fs + i);
+			wb += write_char(fs[i]);
 		i++;
 	}
 	return (wb);

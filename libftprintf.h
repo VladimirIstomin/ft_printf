@@ -6,7 +6,7 @@
 /*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 15:26:34 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/17 19:11:22 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/17 19:21:08 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ size_t		get_parameter_len(const void *obj, char type);
 int			write_formatted_parameter(t_format *format, const void *val);
 int			write_parameter_prefix(t_format *format, const void *val);
 int			write_initial_parameter(t_format *format, const void *val);
-int			write_num_without_sign(int *n);
+int			write_num_without_sign(int n);
 int			write_string(char *s);
-int			write_unsigned_in_notation(unsigned int *n, char *notation_symbols);
-int			write_char(const char *c);
+int			write_unsigned_in_notation(unsigned n, char *notation_symbols);
+int			write_char(char c);
 int			write_char_n_times(char c, int n);
 
 #endif
