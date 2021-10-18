@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmerlene <gmerlene@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmerlene <gmerlene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 15:16:10 by gmerlene          #+#    #+#             */
-/*   Updated: 2021/10/17 19:18:25 by gmerlene         ###   ########.fr       */
+/*   Updated: 2021/10/18 15:29:52 by gmerlene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 static int	validate_format(const char *format_str, int *i)
 {
@@ -43,6 +43,7 @@ static int	get_params_number(t_format	**formats, int n_formats)
 	int	n_params;
 	int	i;
 
+	i = 0;
 	n_params = 0;
 	while (i < n_formats)
 	{
@@ -99,43 +100,13 @@ static t_format	**parse_formats_from_format_string(const char *fs, int n_params)
 	return (formats);
 }
 
-int foo(void **argv, const char *fs, t_format **formats)
-{
-	int	i;
-	int	j;
-	int	wb;
-
-	wb = 0;
-	i = 0;
-	j = 0;
-	while (fs[i])
-	{
-		if (fs[i] == '%')
-		{
-			i++;
-			if (formats[j]->type == '%')
-				wb += write_formatted_parameter(formats[j], NULL);
-			else
-				wb += write_formatted_parameter(formats[j], argv[j]);
-			while (!ft_strchr(CONVERSIONS, fs[i]))
-				i++;           
-			j++;
-		}
-		else
-			wb += write_char(fs[i]);
-		i++;
-	}
-	return (wb);
-}
-
 int	ft_printf(const char *fs, ...)
 {
 	int			n_formats;
 	int			n_params;
 	t_format	**formats;
 	va_list		ap;
-	int			i;
-	void		**argv;
+	int			wb;
 
 	n_formats = get_formats_number(fs);
 	if (n_formats == ERROR)
@@ -143,14 +114,10 @@ int	ft_printf(const char *fs, ...)
 	formats = parse_formats_from_format_string(fs, n_formats);
 	if (!formats)
 		return (ERROR);
+	va_start(ap, fs);
 	n_params = get_params_number(formats, n_formats);
-	va_start(ap, n_params);
-	argv = malloc(sizeof(void *) * n_params);
-	if (!argv)
-		return (ERROR);
-	i = 0;
-	while (i++ < n_params)
-		argv[i - 1] = va_arg(ap, void *);
+	wb = write_formatted_string(ap, fs, formats);
+	free_parsed_formats(formats, n_formats);
 	va_end(ap);
-	return (foo(argv, fs, formats));
+	return (wb);
 }

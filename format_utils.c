@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 static t_format	*create_empty_format_structure(void)
 {
@@ -20,7 +20,7 @@ static t_format	*create_empty_format_structure(void)
 	if (!format)
 		return (NULL);
 	format->type = 0;
-	format->digit_width = 0;
+	format->char_width = 0;
 	format->min_width = 0;
 	format->is_dash = 0;
 	format->is_dot = 0;
@@ -45,7 +45,7 @@ static void	update_modificator(const char *fs, t_format *format, size_t *i)
 	else if (fs[*i] == '.')
 	{
 		format->is_dot = 1;
-		format->digit_width = ft_atoi(fs + *i + 1);
+		format->char_width = ft_atoi(fs + *i + 1);
 		*i = get_index_after_digits(fs, *i + 1);
 	}
 	else if (ft_strchr(POS_DIGITS, fs[*i]))
@@ -96,6 +96,3 @@ t_format	*parse_format(const char *fs, size_t *i)
 		format->is_zero = 0;
 	return (format);
 }
-// possibly update create_format function, because '.' is not possible
-// with some conversion types
-// better check it with -Wall -Werror -Wextra flags, but also run tests
